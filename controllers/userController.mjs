@@ -20,10 +20,12 @@ export const registerUser = async (req, res) => {
         res
             .status(201)
             .json({
-                id: user._id,
-                name: user.name,
-                login: user.login,
-                email: user.email,
+                user: {
+                    id: user._id,
+                    name: user.name,
+                    login: user.login,
+                    email: user.email
+                },
                 token: generateJWT(user._id)
             });
     } catch (err) {
@@ -38,10 +40,12 @@ export const loginUser = async (req, res) => {
         const user = await User.findOne({ email });
         if(user && (await bcrypt.compare(password, user.password))) {
             res.status(200).send({
-                id: user._id,
-                name: user.name,
-                login: user.login,
-                email: user.email,
+                user: {
+                    id: user._id,
+                    name: user.name,
+                    login: user.login,
+                    email: user.email
+                },
                 token: generateJWT(user._id)
             });
         } else {
@@ -53,7 +57,7 @@ export const loginUser = async (req, res) => {
     }
 }
 
-export const testAuth = async (req, res) => {
+export const checkAuth = async (req, res) => {
     console.log(req.user);
-    res.status(200).json({ ...req.user });
+    res.status(200).json(req.user);
 }
